@@ -11,11 +11,11 @@ func handleAggregate(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("could not fetch feed: %w", err)
 	}
-	printFeed(feed)
+	printAggregatedFeed(feed)
 	return nil
 }
 
-func printFeed(feed *RSSFeed) {
+func printAggregatedFeed(feed *RSSFeed) {
 	for _, item := range feed.Channel.Item {
 		fmt.Printf("%v\n%v\n", item.Title, item.Description)
 	}

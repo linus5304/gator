@@ -49,6 +49,8 @@ func main() {
 	commands.register("agg", handleAggregate)
 	commands.register("addfeed", handleAddFeed)
 	commands.register("feeds", handlerListFeeds)
+	commands.register("follow", handleFollowFeed)
+	commands.register("following", handleGetFeedFollowsForUser)
 
 	args := os.Args
 	if len(args) < 2 {
