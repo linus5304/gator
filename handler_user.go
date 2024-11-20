@@ -10,7 +10,7 @@ import (
 )
 
 func handleReset(s *state, cmd command) error {
-	err := s.db.DeleteAllUsers(context.Background())
+	err := s.db.DeleteUsers(context.Background())
 	if err != nil {
 		return fmt.Errorf("could not reset users: %w", err)
 	}
@@ -57,6 +57,25 @@ func handleLogin(s *state, cmd command) error {
 	fmt.Println("User switched successfully:")
 	printUser(user)
 	return nil
+}
+
+func handleGetUsers(s *state, cmd command) error {
+	users, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("could not get users: %w", err)
+	}
+	printUsers(users, s)
+	return nil
+}
+
+func printUsers(users []database.User, s *state) {
+	for _, user := range users {
+		if user.Name == s.cfg.CurrentUserName {
+			fmt.Printf("* %v (current)\n", user.Name)
+		} else {
+			fmt.Printf("* %v\n", user.Name)
+		}
+	}
 }
 
 func printUser(user database.User) {
