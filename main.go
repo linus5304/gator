@@ -46,6 +46,7 @@ func main() {
 	commands.register("register", handleRegister)
 	commands.register("reset", handleReset)
 	commands.register("users", handleGetUsers)
+	commands.register("agg", handleAggregate)
 
 	args := os.Args
 	if len(args) < 2 {
