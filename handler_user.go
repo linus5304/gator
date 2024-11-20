@@ -9,6 +9,15 @@ import (
 	"github.com/linus5304/gator/internal/database"
 )
 
+func handleReset(s *state, cmd command) error {
+	err := s.db.DeleteAllUsers(context.Background())
+	if err != nil {
+		return fmt.Errorf("could not reset users: %w", err)
+	}
+	fmt.Println("Users reset successfully")
+	return nil
+}
+
 func handleRegister(s *state, cmd command) error {
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("usage: %v <username>", cmd.name)
