@@ -9,15 +9,7 @@ import (
 	"github.com/linus5304/gator/internal/database"
 )
 
-func handleAddFeed(s *state, cmd command) error {
-	currentUser := s.cfg.CurrentUserName
-	if currentUser == "" {
-		return fmt.Errorf("you must be logged in to add a feed")
-	}
-	user, err := s.db.GetUserByName(context.Background(), currentUser)
-	if err != nil {
-		return fmt.Errorf("could not get user: %w", err)
-	}
+func handleAddFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 2 {
 		return fmt.Errorf("usage: %v <feed name> <feed url>", cmd.name)
 	}

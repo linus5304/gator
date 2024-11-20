@@ -9,7 +9,7 @@ import (
 	"github.com/linus5304/gator/internal/database"
 )
 
-func handleFollowFeed(s *state, cmd command) error {
+func handleFollowFeed(s *state, cmd command, user database.User) error {
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("usage: %v <feed url>", cmd.name)
 	}
@@ -19,16 +19,11 @@ func handleFollowFeed(s *state, cmd command) error {
 		return fmt.Errorf("could not find feed: %w", err)
 	}
 
-	currentUser, err := s.db.GetUserByName(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("could not find user: %w", err)
-	}
-
 	feedFollow, err := s.db.CreateFeedFollow(context.Background(), database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
-		UserID:    currentUser.ID,
+		UserID:    user.ID,
 		FeedID:    feed.ID,
 	})
 	if err != nil {
@@ -38,12 +33,8 @@ func handleFollowFeed(s *state, cmd command) error {
 	return nil
 }
 
-func handleGetFeedFollowsForUser(s *state, cmd command) error {
-	currentUser, err := s.db.GetUserByName(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("could not find user: %w", err)
-	}
-	feeds, err := s.db.GetFeedFollowsForUser(context.Background(), currentUser.ID)
+func handleGetFeedFollowsForUser(s *state, cmd command, user database.User) error {
+	feeds, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return fmt.Errorf("could not find feeds for user: %w", err)
 	}
@@ -51,7 +42,7 @@ func handleGetFeedFollowsForUser(s *state, cmd command) error {
 		fmt.Println("No feed follows for this user")
 		return nil
 	}
-	fmt.Printf("Feed follows for user %v:\n", currentUser.Name)
+	fmt.Printf("Feed follows for user %v:\n", user.Name)
 	for _, feed := range feeds {
 		printFeedFollow(feed.UserName, feed.FeedName)
 	}
