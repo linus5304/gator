@@ -5,6 +5,7 @@ CREATE TABLE feeds (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     url TEXT NOT NULL UNIQUE,
     name TEXT NOT NULL,
+    last_fetched_at TIMESTAMP WITH TIME ZONE,
     user_id UUID NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
